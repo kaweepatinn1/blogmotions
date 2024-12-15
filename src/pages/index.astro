@@ -223,48 +223,77 @@ import $ from 'jquery';
 	let arrowTargetX = -3.2;
 
 	let options: string[] = [];
+	let lastTab = -1;
+	let pointerActive = true;
 
 	document.addEventListener('DOMContentLoaded', () => {
+		loadMainMenu();
+		requestAnimationFrame(updateAnimations);
+    });
+
+	function loadMainMenu() {
+		pointerActive = true;
 		setTimeout(function(){
 			$(".title").removeClass('start');
 			$("#container").removeClass('start');
 		},5);
-		setTimeout(function(){
-			$("#container").removeClass('start');
-		},200);
 
 		setTimeout(function(){
-			tryRemoveStartChain("?opt", 0, 100);
+			tryEditStartChain(true, "?opt", 0, 100);
 		},55);
 		
 		// forced to run after above
 		setTimeout(function(){
 			$(".title").css('pointer-events', 'all');
-			$(".title").css('transition', '0.4s ease-out');
+			$(".title").css('transition', '0.4s ease-in-out');
 			arrowTargetX = -1.2;
 		},1200);
 		setTimeout(function(){
-			$("#container").css('pointer-events', 'all');
-			$("#container").css('transition', '0.5s ease-out');
+			$("#container").css('pointer-events', 'none');
+			$("#container").css('transition', '1.5s ease-out');
 		},2500);
 		setTimeout(function(){
 			$(".item").css('pointer-events', 'all');
 			$("#arrow").css('pointer-events', 'none');
 			$(".item").css('transition', '0.4s ease-out');
 		},1800);
-		requestAnimationFrame(updateAnimations);
-    });
+	}
 
-	function tryRemoveStartChain(name: string, index: number, delay: number) {
+	function unloadMainMenu(){
+		setTimeout(function(){
+			arrowTargetX = -3.2;
+			$(".title").css('pointer-events', 'none');
+			$("#container").css('pointer-events', 'none');
+			$(".item").css('pointer-events', 'none');
+			$("#arrow").css('pointer-events', 'none');
+			$(".item").css('transition', '1.2s ease-in');
+			$("#arrow").css('transition', '0.4s ease-out');
+			$(".title").css('transition', '1s ease-in');
+			$("#container").css('transition', '1.5s ease-in');
+			$(".title").addClass('start');
+			$("#container").addClass('start');
+			tryEditStartChain(false, "?opt", 0, 100);
+		},10);
+		// forced to run after above
+		setTimeout(function(){
+			
+			$(".item").css('transition', '1.8s ease-in-out');
+			$(".title").css('transition', '1.8s ease-out');
+			$("#container").css('transition', '1.5s ease-out');
+			pointerActive = false;
+		},1000);
+	}
+
+	function tryEditStartChain(remove: boolean, name: string, index: number, delay: number) {
 		// console.log(index);
-		if (tryRemoveStart(name + index.toString())){
+		if (tryEditStart(remove, name + index.toString())){
 			setTimeout(function(){
-				tryRemoveStartChain(name, index + 1, delay);
+				tryEditStartChain(remove, name, index + 1, delay);
 			},delay);
 		}
 	}
 
-	function tryRemoveStart(name: string): boolean {
+	function tryEditStart(remove: boolean, name: string): boolean {
 		if (document.getElementById(name) == null) {
 			console.log("failed:" + name);
 			return false;
@@ -278,7 +307,11 @@ import $ from 'jquery';
 			}
 			
 			console.log("success:" + name);
-			$(toChange).removeClass('start');
+			if (remove){
+				$(toChange).removeClass('start');
+			} else{
+				$(toChange).addClass('start');
+			}
 			return true;
 		}
 	}
@@ -312,18 +345,26 @@ import $ from 'jquery';
 		
 
 		let containerMulti = 1;
-		let bodyMulti = 0.5;
-		// $("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
-		// below code also moved around the background, but causes a bunch of lag for some reason
-		$("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
+		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
+		
+		// below code also moved around the background, but causes a bunch of lag
+		// let bodyMulti = 0.5;
+		// $("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
 
 		// selector arrow ---------------------
 
 		// runs only if main menu open
-		let tab = $("#tabnumber").css("z-index");
-		if (parseInt(tab) == -1) {
-			let container = document.getElementById("container");
+		let tab = parseInt($("#tabnumber").css("z-index"));
 
+		if (lastTab == -1 && tab != -1){
+			unloadMainMenu();
+		}
+		if (lastTab != -1 && tab == -1){
+			loadMainMenu();
+		}
+		if (pointerActive) {
+			let container = document.getElementById("container");
+			console.log(arrowX);
 			if (container != null) {
 				let containerRect = container.getBoundingClientRect();
 				let element = document.getElementById("?opt0");
@@ -352,12 +393,11 @@ import $ from 'jquery';
 								(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
 								- (window.innerHeight / 200)
 					) - containerRect.top - 2 * rectGap;
-					// console.log(optionsOffset);
 					$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
 				}
 			}
 		}
-
+		lastTab = tab;
 		requestAnimationFrame(updateAnimations);
 	}
 </script>
