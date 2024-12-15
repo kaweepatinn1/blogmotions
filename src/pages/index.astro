@@ -299,19 +299,21 @@ import $ from 'jquery';
 		let easeSpeed = 0.05;
 		let multi = 0.001;
 
-		// let w = window.innerWidth;
-		// let h = window.innerHeight;
-
-		// targetX = (x - w/2);
-		// targetY = (y - h/2);
-
-		// curX = curX * (1 - easeSpeed) + targetX *  (easeSpeed);
-		// curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
 		arrowX = arrowX * (1 - easeSpeed) + arrowTargetX *  (easeSpeed);
 
-		// let containerMulti = 1;
-		// let bodyMulti = 0.5;
-		// $("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
+		let w = window.innerWidth;
+		let h = window.innerHeight;
+
+		targetX = (x - w/2);
+		targetY = (y - h/2);
+
+		curX = curX * (1 - easeSpeed) + targetX *  (easeSpeed);
+		curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
+		
+
+		let containerMulti = 1;
+		let bodyMulti = 0.5;
+		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
 		// $("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
 
 		// selector arrow ---------------------
