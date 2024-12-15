@@ -1,39 +1,44 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import $ from 'jquery';
 ---
 
 <Layout>
+	<div id="tabnumber" style="z-index: -1;"></div>
 	<div id="body">
 		<div id="container-stack-1">
 			<div id="container" class="start">
-				<div id="titlebox">
-					<div class="title start">
+				<div class="titlebox">
+					<div class="title start" onclick="linkTo('.')">
 						[blogmotions v0.0.1]
 					</div>
 				</div>
 				<div id="arrow" class="item start">
 					>
 				</div>
-				<div id="textbox">
-					<div id="?opt0" class="item start">
+				<div class="textbox">
+					<div id="?opt0" class="item start" onclick="clickOption(0)">
 						all blogs
 					</div>
 				</div>
-				<div id="textbox">
-					<div id="?opt1" class="item start">
+				<div class="textbox">
+					<div id="?opt1" class="item start" onclick="clickOption(1)">
 						animation & afterfx
 					</div>
 				</div>
-				<div id="textbox">
-					<div id="?opt2" class="item start">
+				<div class="textbox">
+					<div id="?opt2" class="item start" onclick="clickOption(2)">
 						ones, zeros, and lenses
 					</div>
 				</div>
-				<div id="textbox">
-					<div id="?opt3" class="item start">
+				<div class="textbox">
+					<div id="?opt3" class="item start" onclick="clickOption(3)">
 						the set diary
+					</div>
+				</div>
+				<div id="relink" class="titlebox">
+					<div class="end title start" onclick="redirectToMainWebsite()">
+						nanomotions.org
 					</div>
 				</div>
 				<div id="grid"></div>
@@ -54,21 +59,26 @@ import $ from 'jquery';
 	}
 	#body {
 		display: flex;
-		justify-content: center;
 		width: 100%;
 		height: 100%;
+		/* transform: translate(5vw,5vh); */
 		overflow: visible;
 		background:
 		linear-gradient(rgba(190, 149, 218, 0.2), rgba(180, 180, 180, 0.6)),
 		url('../assets/noise_black.svg');
 	}
 	#conatiner-stack-1{
+		width: 100vw;
+		height: 100vh;
+		position: absolute;
 		overflow: hidden;
 		display: flex;
 	}
 	#container {
+		position: absolute;
+		left: 35vw;
+		top: calc(50vh - 10vw);
 		display: flex;
-		margin-top: 15vw;
 		font-family: 'Helvetica Neue', sans-serif;
 		width: 30vw;
 		height: 20vw;
@@ -92,17 +102,23 @@ import $ from 'jquery';
 		box-shadow: 1px 1px 0.4vw #00000059, 1px 1px 0.2vw #00000053, 1px 1px 0.2vw #000000;
 	}
 
-	#titlebox{
+	.titlebox{
 		/* margin-left: 50vw;
 		margin-right: 50vw; */
 		display: flex;
 		margin: 1vw;
 	}
 
-	#textbox{
+	.textbox{
 		/* enable if hover effect should not extend to the end of the terminal */
 		/* display: flex;  */
 		/* justify-content: right; */
+	}
+
+	#relink{
+		margin-top: 6.5vw;
+		display:flex;
+		justify-content: flex-end;
 	}
 
 	#arrow{
@@ -123,6 +139,7 @@ import $ from 'jquery';
 		color:#ffffff;
 		transition: 1.8s ease-in-out;
 		pointer-events: none;
+		cursor: pointer;
 	}
 	.item:hover{
 		transform: translate(0.25vw, 0.25vw);
@@ -161,6 +178,11 @@ import $ from 'jquery';
 		color:#ffffff;
 		transition: 1.8s ease-in-out;
 		pointer-events: none;
+		cursor: pointer;
+	}
+
+	.title.end.start{
+		transform: translate(15vw,0vw);
 	}
 
 	.title.start {
@@ -179,15 +201,18 @@ import $ from 'jquery';
 		opacity: 0.8;
 	}
 
+	#container.remove{
+		transform: translate(0vw, 100vh);
+	}
+
 
 </style>
 
 <script>
-import $ from "jquery";
+	import $ from "jquery";
 
 	let x = 0;
 	let y = 0;
-
 	let curX = 0;
 	let curY = 0;
 
@@ -197,20 +222,20 @@ import $ from "jquery";
 	let arrowX = -3.2;
 	let arrowTargetX = -3.2;
 
-	// let hovering = null;
 	let options: string[] = [];
 
 	document.addEventListener('DOMContentLoaded', () => {
-		$(".title").removeClass('start');
-		$("#container").removeClass('start');
-
+		setTimeout(function(){
+			$(".title").removeClass('start');
+			$("#container").removeClass('start');
+		},5);
 		setTimeout(function(){
 			$("#container").removeClass('start');
 		},200);
 
 		setTimeout(function(){
 			tryRemoveStartChain("?opt", 0, 100);
-		},50);
+		},55);
 		
 		// forced to run after above
 		setTimeout(function(){
@@ -231,7 +256,7 @@ import $ from "jquery";
     });
 
 	function tryRemoveStartChain(name: string, index: number, delay: number) {
-		console.log(index);
+		// console.log(index);
 		if (tryRemoveStart(name + index.toString())){
 			setTimeout(function(){
 				tryRemoveStartChain(name, index + 1, delay);
@@ -268,6 +293,9 @@ import $ from "jquery";
 	})
 
 	function updateAnimations(){
+
+		// ease catch up -----------------------
+
 		let easeSpeed = 0.05;
 		let multi = 0.001;
 
@@ -286,58 +314,47 @@ import $ from "jquery";
 		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
 		$("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
 
-		//---------------------
+		// selector arrow ---------------------
 
-		let container = document.getElementById("container");
+		// runs only if main menu open
+		let tab = $("#tabnumber").css("z-index");
+		if (parseInt(tab) == -1) {
+			let container = document.getElementById("container");
 
-		if (container != null) {
-			let containerRect = container.getBoundingClientRect();
-			let element = document.getElementById("?opt0");
-			let elementSecond = document.getElementById("?opt1");
-			let elementSecondLast = document.getElementById("?opt2");
-			let elementLast = document.getElementById("?opt3");
-			if (element != null && elementSecond != null && elementSecondLast != null && elementLast != null) {
-				let rect = element.getBoundingClientRect();
-				let rectSecond = elementSecond.getBoundingClientRect();
-				let rectSecondLast = elementSecondLast.getBoundingClientRect();
-				let rectGap = rect.bottom - rect.top;
-				let rectLast = elementLast.getBoundingClientRect();
-				let singleGapTop = (rectLast.top - rectSecondLast.top);
-				let singleGapBottom = (rectSecond.top - rect.top);
-				let yPos = Math.min(
-					Math.max(
-						y - (rect.bottom - rect.top) / 4, 
+			if (container != null) {
+				let containerRect = container.getBoundingClientRect();
+				let element = document.getElementById("?opt0");
+				let elementSecond = document.getElementById("?opt1");
+				let elementSecondLast = document.getElementById("?opt2");
+				let elementLast = document.getElementById("?opt3");
+				if (element != null && elementSecond != null && elementSecondLast != null && elementLast != null) {
+					let rect = element.getBoundingClientRect();
+					let rectSecond = elementSecond.getBoundingClientRect();
+					let rectSecondLast = elementSecondLast.getBoundingClientRect();
+					let rectGap = rect.bottom - rect.top;
+					let rectLast = elementLast.getBoundingClientRect();
+					let singleGapTop = (rectLast.top - rectSecondLast.top);
+					let singleGapBottom = (rectSecond.top - rect.top);
+					let yPos = Math.min(
 						Math.max(
-							(rect.top + rect.bottom) / 2, 
-							(rectSecond.top + rectSecond.bottom) / 2 - singleGapTop) 
-							- (window.innerHeight / 100)
-					), 
-					Math.min(
+							y - (rect.bottom - rect.top) / 4, 
+							Math.max(
+								(rect.top + rect.bottom) / 2, 
+								(rectSecond.top + rectSecond.bottom) / 2 - singleGapTop) 
+								- (window.innerHeight / 100)
+						), 
 						Math.min(
-							(rectLast.top + rectLast.bottom) / 2),
-							(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
-							+ (window.innerHeight / 1000)
-				) - containerRect.top - 2 * rectGap;
-				// console.log(optionsOffset);
-				$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
+							Math.min(
+								(rectLast.top + rectLast.bottom) / 2),
+								(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
+								- (window.innerHeight / 200)
+					) - containerRect.top - 2 * rectGap;
+					// console.log(optionsOffset);
+					$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
+				}
 			}
 		}
+
 		requestAnimationFrame(updateAnimations);
 	}
-	document.addEventListener('keydown', (event) => {
-		switch (event.key) {
-			case "ArrowLeft":
-				// Left pressed
-				break;
-			case "ArrowRight":
-				// Right pressed
-				break;
-			case "ArrowUp":
-				// Up pressed
-				break;
-			case "ArrowDown":
-				// Down pressed
-				break;
-		}
-	});
 </script>
