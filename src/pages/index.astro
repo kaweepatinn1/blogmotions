@@ -135,7 +135,7 @@ import $ from 'jquery';
 		font-size: 1.5vw;
 		font-weight: 500;
 		text-align: left;
-		/* text-shadow:0.2vw 0.2vw 0.8vw #ffffff2d, 0.2vw 0.2vw 0.5vw #ffffff41, 0px 0px 0.2vw #ffffff; */
+		text-shadow:0.2vw 0.2vw 0.8vw #ffffff2d, 0.2vw 0.2vw 0.5vw #ffffff41, 0px 0px 0.2vw #ffffff;
 		color:#ffffff;
 		transition: 1.8s ease-in-out;
 		pointer-events: none;
@@ -143,7 +143,7 @@ import $ from 'jquery';
 	}
 	.item:hover{
 		transform: translate(0.25vw, 0.25vw);
-		/* text-shadow:0px 0px 0.4vw #ffffff7a, 0px 0px 0.2vw #ffffff6e, 0px 0px 0.1vw #ffffffd8; */
+		text-shadow:0px 0px 0.4vw #ffffff7a, 0px 0px 0.2vw #ffffff6e, 0px 0px 0.1vw #ffffffd8;
 		opacity: 0.7;
 	}
 	.item.start{
@@ -296,23 +296,23 @@ import $ from 'jquery';
 
 		// ease catch up -----------------------
 
-		let easeSpeed = 0.05;
-		let multi = 0.001;
+		// let easeSpeed = 0.05;
+		// let multi = 0.001;
 
-		let w = window.innerWidth;
-		let h = window.innerHeight;
+		// let w = window.innerWidth;
+		// let h = window.innerHeight;
 
-		targetX = (x - w/2);
-		targetY = (y - h/2);
+		// targetX = (x - w/2);
+		// targetY = (y - h/2);
 
-		curX = curX * (1 - easeSpeed) + targetX *  (easeSpeed);
-		curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
-		arrowX = arrowX * (1 - easeSpeed) + arrowTargetX *  (easeSpeed);
+		// curX = curX * (1 - easeSpeed) + targetX *  (easeSpeed);
+		// curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
+		// arrowX = arrowX * (1 - easeSpeed) + arrowTargetX *  (easeSpeed);
 
-		let containerMulti = 1;
-		let bodyMulti = 0.5;
-		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
-		$("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
+		// let containerMulti = 1;
+		// let bodyMulti = 0.5;
+		// $("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
+		// $("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
 
 		// selector arrow ---------------------
 
