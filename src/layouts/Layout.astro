@@ -1,0 +1,38 @@
+---
+import noise from '../assets/noise.svg';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Template</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+		<link href="https://fonts.cdnfonts.com/css/helvetica-neue-55" rel="stylesheet">
+		<script is:inline src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 120vw;
+		height: 120vh;
+		transform: translate(0.5vw,-0.5vw);
+		/* background:
+		linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
+		url('../assets/noise_black.svg'); */
+		display: flex;
+		overflow: hidden;
+		perspective: 10px;
+	}
+</style>

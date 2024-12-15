@@ -1,0 +1,343 @@
+---
+import Welcome from '../components/Welcome.astro';
+import Layout from '../layouts/Layout.astro';
+import $ from 'jquery';
+---
+
+<Layout>
+	<div id="body">
+		<div id="container-stack-1">
+			<div id="container" class="start">
+				<div id="titlebox">
+					<div class="title start">
+						[blogmotions v0.0.1]
+					</div>
+				</div>
+				<div id="arrow" class="item start">
+					>
+				</div>
+				<div id="textbox">
+					<div id="?opt0" class="item start">
+						all blogs
+					</div>
+				</div>
+				<div id="textbox">
+					<div id="?opt1" class="item start">
+						animation & afterfx
+					</div>
+				</div>
+				<div id="textbox">
+					<div id="?opt2" class="item start">
+						ones, zeros, and lenses
+					</div>
+				</div>
+				<div id="textbox">
+					<div id="?opt3" class="item start">
+						the set diary
+					</div>
+				</div>
+				<div id="grid"></div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	#grid{
+		width: 30vw;
+		height: 20vw;
+		position: absolute;
+		background-image: url('../assets/overlay.svg');
+		z-index: 1;
+		pointer-events: none;
+		transition: 0.5s ease-out;
+	}
+	#body {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		background:
+		linear-gradient(rgba(190, 149, 218, 0.2), rgba(180, 180, 180, 0.6)),
+		url('../assets/noise_black.svg');
+	}
+	#conatiner-stack-1{
+		overflow: hidden;
+		display: flex;
+	}
+	#container {
+		display: flex;
+		margin-top: 15vw;
+		font-family: 'Helvetica Neue', sans-serif;
+		width: 30vw;
+		height: 20vw;
+		flex-direction: column;
+		border:0.15vw solid white;
+		background:
+		linear-gradient(#1616162a, #0e0e0eda),
+		url('../assets/noise_black.svg');
+		transition: 1.5s ease-out;
+		box-shadow: 15px 15px 2vw #00000079, 15px 15px 1vw #00000073, 5px 5px 0.2vw #00000000;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	#container.start{
+		/* transform: rotate3d(0,2,1,60deg) translate3d(-100vw, 100vw, 100vw); */
+	}
+
+	#container:hover{
+		transform: translate(0.25vw, 0.25vw);
+		box-shadow: 1px 1px 0.4vw #00000059, 1px 1px 0.2vw #00000053, 1px 1px 0.2vw #000000;
+	}
+
+	#titlebox{
+		/* margin-left: 50vw;
+		margin-right: 50vw; */
+		display: flex;
+		margin: 1vw;
+	}
+
+	#textbox{
+		/* enable if hover effect should not extend to the end of the terminal */
+		/* display: flex;  */
+		/* justify-content: right; */
+	}
+
+	#arrow{
+		line-height: 0;
+		pointer-events: none;
+		position: relative;
+		transition: 0.2s;
+		/* overflow: hidden; */
+	}
+
+	.item{
+		display: flex;
+		margin-left: 2.2vw;
+		font-size: 1.5vw;
+		font-weight: 500;
+		text-align: left;
+		text-shadow:0.2vw 0.2vw 0.8vw #ffffff2d, 0.2vw 0.2vw 0.5vw #ffffff41, 0px 0px 0.2vw #ffffff;
+		color:#ffffff;
+		transition: 1.8s ease-in-out;
+		pointer-events: none;
+	}
+	.item:hover{
+		transform: translate(0.25vw, 0.25vw);
+		text-shadow:0px 0px 0.4vw #ffffff7a, 0px 0px 0.2vw #ffffff6e, 0px 0px 0.1vw #ffffffd8;
+		opacity: 0.7;
+	}
+	.item.start{
+		transform: translate(-15vw,0vw);
+	}
+
+	.item#arrow{
+		pointer-events: none;
+	}
+
+	#\?opt0.start{
+		transform: translate(-15vw,0vw);
+	}
+
+	#\?opt1.start{
+		transform: translate(-20vw,0vw);
+	}
+
+	#\?opt2.start{
+		transform: translate(-25vw,0vw);
+	}
+
+	#\?opt3.start{
+		transform: translate(-30vw,0vw);
+	}
+
+	.title{
+		font-size: 1.5vw;
+		transform: translate(0vw, 0vw);
+		font-weight: 500;
+		text-shadow:5px 5px 1.5vw #ffffff79, 5px 5px 1vw #ffffff73, 0px 0px 0.2vw #ffffff;
+		color:#ffffff;
+		transition: 1.8s ease-in-out;
+		pointer-events: none;
+	}
+
+	.title.start {
+        transform: translate(-15vw,0vw);
+    }
+
+	.title:hover{
+		transform: translate(0.2vw, 0.2vw);
+		text-shadow:0px 0px 0.4vw #ffffff59, 0px 0px 0.2vw #ffffff53, 0px 0px 0.2vw #ffffff;
+		opacity: 0.8;
+	}
+
+	.title.hover{
+		transform: translate(0.2vw, 0.2vw);
+		text-shadow:0px 0px 0.4vw #ffffff59, 0px 0px 0.2vw #ffffff53, 0px 0px 0.2vw #ffffff;
+		opacity: 0.8;
+	}
+
+
+</style>
+
+<script>
+import $ from "jquery";
+
+	let x = 0;
+	let y = 0;
+
+	let curX = 0;
+	let curY = 0;
+
+	let targetX = 0;
+	let targetY = 0;
+
+	let arrowX = -3.2;
+	let arrowTargetX = -3.2;
+
+	// let hovering = null;
+	let options: string[] = [];
+
+	document.addEventListener('DOMContentLoaded', () => {
+		$(".title").removeClass('start');
+		$("#container").removeClass('start');
+
+		setTimeout(function(){
+			$("#container").removeClass('start');
+		},200);
+
+		setTimeout(function(){
+			tryRemoveStartChain("?opt", 0, 100);
+		},50);
+		
+		// forced to run after above
+		setTimeout(function(){
+			$(".title").css('pointer-events', 'all');
+			$(".title").css('transition', '0.4s ease-out');
+			arrowTargetX = -1.2;
+		},1200);
+		setTimeout(function(){
+			$("#container").css('pointer-events', 'all');
+			$("#container").css('transition', '0.5s ease-out');
+		},2500);
+		setTimeout(function(){
+			$(".item").css('pointer-events', 'all');
+			$("#arrow").css('pointer-events', 'none');
+			$(".item").css('transition', '0.4s ease-out');
+		},1800);
+		requestAnimationFrame(updateAnimations);
+    });
+
+	function tryRemoveStartChain(name: string, index: number, delay: number) {
+		console.log(index);
+		if (tryRemoveStart(name + index.toString())){
+			setTimeout(function(){
+				tryRemoveStartChain(name, index + 1, delay);
+			},delay);
+		}
+	}
+
+	function tryRemoveStart(name: string): boolean {
+		if (document.getElementById(name) == null) {
+			console.log("failed:" + name);
+			return false;
+		} else {
+			let toChange;
+			if (name.substring(0,1) == '?') {
+				options.push(name);
+				toChange = "#\\" + name;
+			} else{
+				toChange = "#" + name;
+			}
+			
+			console.log("success:" + name);
+			$(toChange).removeClass('start');
+			return true;
+		}
+	}
+
+	document.addEventListener('mousemove', (e) => {
+		x = e.clientX;
+		y = e.clientY;
+
+		// options.forEach((option) => {
+		// 	option
+		// });
+	})
+
+	function updateAnimations(){
+		let easeSpeed = 0.05;
+		let multi = 0.001;
+
+		let w = window.innerWidth;
+		let h = window.innerHeight;
+
+		targetX = (x - w/2);
+		targetY = (y - h/2);
+
+		curX = curX * (1 - easeSpeed) + targetX *  (easeSpeed);
+		curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
+		arrowX = arrowX * (1 - easeSpeed) + arrowTargetX *  (easeSpeed);
+
+		let containerMulti = 1;
+		let bodyMulti = 0.5;
+		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
+		$("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
+
+		//---------------------
+
+		let container = document.getElementById("container");
+
+		if (container != null) {
+			let containerRect = container.getBoundingClientRect();
+			let element = document.getElementById("?opt0");
+			let elementSecond = document.getElementById("?opt1");
+			let elementSecondLast = document.getElementById("?opt2");
+			let elementLast = document.getElementById("?opt3");
+			if (element != null && elementSecond != null && elementSecondLast != null && elementLast != null) {
+				let rect = element.getBoundingClientRect();
+				let rectSecond = elementSecond.getBoundingClientRect();
+				let rectSecondLast = elementSecondLast.getBoundingClientRect();
+				let rectGap = rect.bottom - rect.top;
+				let rectLast = elementLast.getBoundingClientRect();
+				let singleGapTop = (rectLast.top - rectSecondLast.top);
+				let singleGapBottom = (rectSecond.top - rect.top);
+				let yPos = Math.min(
+					Math.max(
+						y - (rect.bottom - rect.top) / 4, 
+						Math.max(
+							(rect.top + rect.bottom) / 2, 
+							(rectSecond.top + rectSecond.bottom) / 2 - singleGapTop) 
+							- (window.innerHeight / 100)
+					), 
+					Math.min(
+						Math.min(
+							(rectLast.top + rectLast.bottom) / 2),
+							(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
+							+ (window.innerHeight / 1000)
+				) - containerRect.top - 2 * rectGap;
+				// console.log(optionsOffset);
+				$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
+			}
+		}
+		requestAnimationFrame(updateAnimations);
+	}
+	document.addEventListener('keydown', (event) => {
+		switch (event.key) {
+			case "ArrowLeft":
+				// Left pressed
+				break;
+			case "ArrowRight":
+				// Right pressed
+				break;
+			case "ArrowUp":
+				// Up pressed
+				break;
+			case "ArrowDown":
+				// Down pressed
+				break;
+		}
+	});
+</script>
