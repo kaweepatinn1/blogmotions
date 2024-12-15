@@ -313,8 +313,9 @@ import $ from 'jquery';
 
 		let containerMulti = 1;
 		let bodyMulti = 0.5;
-		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
-		// $("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
+		// $("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
+		// below code also moved around the background, but causes a bunch of lag for some reason
+		$("#body").css('transform', 'translate(' + bodyMulti * multi * curX + 'vw,' + bodyMulti * multi * curY + 'vw)');
 
 		// selector arrow ---------------------
 
