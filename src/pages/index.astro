@@ -317,43 +317,43 @@ import $ from 'jquery';
 		// selector arrow ---------------------
 
 		// runs only if main menu open
-		let tab = $("#tabnumber").css("z-index");
-		if (parseInt(tab) == -1) {
-			let container = document.getElementById("container");
+		// let tab = $("#tabnumber").css("z-index");
+		// if (parseInt(tab) == -1) {
+		// 	let container = document.getElementById("container");
 
-			if (container != null) {
-				let containerRect = container.getBoundingClientRect();
-				let element = document.getElementById("?opt0");
-				let elementSecond = document.getElementById("?opt1");
-				let elementSecondLast = document.getElementById("?opt2");
-				let elementLast = document.getElementById("?opt3");
-				if (element != null && elementSecond != null && elementSecondLast != null && elementLast != null) {
-					let rect = element.getBoundingClientRect();
-					let rectSecond = elementSecond.getBoundingClientRect();
-					let rectSecondLast = elementSecondLast.getBoundingClientRect();
-					let rectGap = rect.bottom - rect.top;
-					let rectLast = elementLast.getBoundingClientRect();
-					let singleGapTop = (rectLast.top - rectSecondLast.top);
-					let singleGapBottom = (rectSecond.top - rect.top);
-					let yPos = Math.min(
-						Math.max(
-							y - (rect.bottom - rect.top) / 4, 
-							Math.max(
-								(rect.top + rect.bottom) / 2, 
-								(rectSecond.top + rectSecond.bottom) / 2 - singleGapTop) 
-								- (window.innerHeight / 100)
-						), 
-						Math.min(
-							Math.min(
-								(rectLast.top + rectLast.bottom) / 2),
-								(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
-								- (window.innerHeight / 200)
-					) - containerRect.top - 2 * rectGap;
-					// console.log(optionsOffset);
-					$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
-				}
-			}
-		}
+		// 	if (container != null) {
+		// 		let containerRect = container.getBoundingClientRect();
+		// 		let element = document.getElementById("?opt0");
+		// 		let elementSecond = document.getElementById("?opt1");
+		// 		let elementSecondLast = document.getElementById("?opt2");
+		// 		let elementLast = document.getElementById("?opt3");
+		// 		if (element != null && elementSecond != null && elementSecondLast != null && elementLast != null) {
+		// 			let rect = element.getBoundingClientRect();
+		// 			let rectSecond = elementSecond.getBoundingClientRect();
+		// 			let rectSecondLast = elementSecondLast.getBoundingClientRect();
+		// 			let rectGap = rect.bottom - rect.top;
+		// 			let rectLast = elementLast.getBoundingClientRect();
+		// 			let singleGapTop = (rectLast.top - rectSecondLast.top);
+		// 			let singleGapBottom = (rectSecond.top - rect.top);
+		// 			let yPos = Math.min(
+		// 				Math.max(
+		// 					y - (rect.bottom - rect.top) / 4, 
+		// 					Math.max(
+		// 						(rect.top + rect.bottom) / 2, 
+		// 						(rectSecond.top + rectSecond.bottom) / 2 - singleGapTop) 
+		// 						- (window.innerHeight / 100)
+		// 				), 
+		// 				Math.min(
+		// 					Math.min(
+		// 						(rectLast.top + rectLast.bottom) / 2),
+		// 						(rectSecondLast.top + rectSecondLast.bottom) / 2 + singleGapBottom)
+		// 						- (window.innerHeight / 200)
+		// 			) - containerRect.top - 2 * rectGap;
+		// 			// console.log(optionsOffset);
+		// 			$("#arrow").css('transform', 'translate(' + arrowX + 'vw,' + yPos + 'px)');
+		// 		}
+		// 	}
+		// }
 
 		requestAnimationFrame(updateAnimations);
 	}
