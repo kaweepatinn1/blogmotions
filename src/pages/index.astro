@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Arrows from '../assets/outarrows.svg?raw';
 import $ from 'jquery';
 ---
 
@@ -7,39 +8,45 @@ import $ from 'jquery';
 	<div id="tabnumber" style="z-index: 1;"></div>
 	<div id="body">
 		<div id="container-stack-1">
-			<div id="mainmenu" class="menu1 menu start">
-				<div class="grid"></div>
-				<div class="titlebox">
-					<div class="title1 title start" onclick="linkTo('.')">
-						[blogmotions v0.0.1]
+			<div id="mainmenudrag">
+				<div id="mainmenu" class="menu1 menu start">
+					<div class="grid"></div>
+					<div class="outarrow">
+						<img id="mover_mainmenudrag" class="title1 outarrow start" src="src/assets/outarrows.svg" draggable="false">
+						<!-- <Fragment set:html={Arrows} /> -->
 					</div>
-				</div>
-				<div class="arrow1 arrow item1 item start">
-					>
-				</div>
-				<div class="textbox">
-					<div id="?opt0" class="item1 item start" onclick="menuOption(2)">
-						all blogs
+					<div class="titlebox">
+						<div class="title1 title start" onclick="linkTo('.')">
+							[blogmotions v0.0.1]
+						</div>
 					</div>
-				</div>
-				<div class="textbox">
-					<div id="?opt1" class="item1 item start" onclick="menuOption(3)">
-						animation & afterfx
+					<div class="arrow1 arrow item1 item start">
+						>
 					</div>
-				</div>
-				<div class="textbox">
-					<div id="?opt2" class="item1 item start" onclick="menuOption(4)">
-						ones, zeros, and lenses
+					<div class="textbox">
+						<div id="?opt0" class="item1 item start" onclick="menuOption(2)">
+							all blogs
+						</div>
 					</div>
-				</div>
-				<div class="textbox">
-					<div id="?opt3" class="item1 item start" onclick="menuOption(5)">
-						the set diary
+					<div class="textbox">
+						<div id="?opt1" class="item1 item start" onclick="menuOption(3)">
+							animation & afterfx
+						</div>
 					</div>
-				</div>
-				<div id="relink" class="titlebox">
-					<div class="end title1 title start" onclick="redirectToMainWebsite()">
-						nanomotions.org
+					<div class="textbox">
+						<div id="?opt2" class="item1 item start" onclick="menuOption(4)">
+							ones, zeros, and lenses
+						</div>
+					</div>
+					<div class="textbox">
+						<div id="?opt3" class="item1 item start" onclick="menuOption(5)">
+							the set diary
+						</div>
+					</div>
+					<div id="relink" class="titlebox">
+						<div class="end title1 title start" onclick="redirectToMainWebsite()">
+							nanomotions.org
+						</div>
 					</div>
 				</div>
 			</div>
@@ -212,6 +219,31 @@ import $ from 'jquery';
 		pointer-events: none;
 	}
 
+	.outarrow{
+		position: absolute;
+		pointer-events: all;
+		width: 2vw;
+		right: 0.5vw;
+		top: 0.5vw;
+		transition: 1.2s ease-out;
+		-webkit-filter: drop-shadow(0.05vw 0.05vw 0.4vw #ffffff2d) drop-shadow(0.05vw 0.05vw 0.25vw #ffffff41) drop-shadow(0px 0px 0.1vw #ffffff81);
+		filter: drop-shadow(0.05vw 0.05vw 0.4vw #ffffff2d) drop-shadow(0.05vw 0.05vw 0.25vw #ffffff41) drop-shadow(0px 0px 0.1vw #ffffff81);
+		cursor: pointer;
+	}
+
+	.outarrow:hover{
+		width: 2.4vw;
+		right: 0.3vw;
+		top: 0.3vw;
+		opacity: 0.7;
+		-webkit-filter: drop-shadow(0vw 0vw 0.2vw #ffffff2d) drop-shadow(0vw 0vw 0.12vw #ffffff41) drop-shadow(0px 0px 0.1vw #ffffff50);
+		filter: drop-shadow(0vw 0vw 0.2vw #ffffff2d) drop-shadow(0vw 0vw 0.12vw #ffffff41) drop-shadow(0px 0px 0.1vw #ffffff50);
+	}
+
+	.outarrow.start{
+		transform: translate(5vw,0vw);
+	}
+
 	.title{
 		font-size: 1.5vw;
 		transform: translate(0vw, 0vw);
@@ -264,6 +296,18 @@ import $ from 'jquery';
 	let options: string[] = [];
 	let lastTab = 1;
 	let pointerOneActive = true;
+
+	class pixelTransform {
+		boxName: String;
+		xOffset: number;
+		yOffset: number;
+
+		public constructor(boxName: String, xOffset: number, yOffset: number){
+			this.boxName = boxName;
+			this.xOffset = xOffset;
+			this.yOffset = yOffset;
+		}
+	}
 
 	document.addEventListener('DOMContentLoaded', () => {
 		loadMenu(-1);
@@ -320,7 +364,7 @@ import $ from 'jquery';
 		},1500);
 		setTimeout(function(){
 			$(titleClass).css('pointer-events', 'all');
-			$(titleClass).css('transition', '0.4s ease-in-out');
+			$(titleClass).css('transition', '0.4s ease-out');
 			$(menuClass).css('transition', transition);
 			$(menuClass).css('pointer-events', 'all');
 		},2000);
@@ -411,10 +455,55 @@ import $ from 'jquery';
 		}
 	}
 
+	let dragging = -1;
+	let draggingItem: String;
+	let dragInitX: number, dragInitY: number;
+	let oldTransition: string;
+	let transformsList: pixelTransform[] = new Array();
+
+	document.addEventListener('mousedown', (e) => {
+		// document.body.style.userSelect = 'none';
+		let target = e.target as HTMLElement;
+		let ID = target.id;
+		
+		if (ID.substring(0,5) == 'mover'){
+			dragInitX = e.clientX;
+			dragInitY = e.clientY;
+			draggingItem = ID.substring(6.);
+			
+			let addNewBox = true;
+			for (var i = 0; i < transformsList.length; i++) {
+				if (draggingItem = transformsList[i].boxName) {
+					addNewBox = false;
+					dragging = i;
+					break;
+				} 
+			}
+			if(addNewBox){
+				transformsList.push(new pixelTransform(draggingItem,0,0));
+				dragging = transformsList.length - 1;
+			}
+			oldTransition = $("#mainmenudrag").css("transition");
+			$("#" + draggingItem).css('transition', '0s ease-out');
+		} else {
+			dragging = -1;
+		}
+	})
+
+	document.addEventListener('mouseup', (e) => {
+		transformsList[dragging].xOffset = transformsList[dragging].xOffset + x - dragInitX;
+		transformsList[dragging].yOffset = transformsList[dragging].yOffset + y - dragInitY;
+		$("#" + draggingItem).css('transition', oldTransition);
+		dragging = -1;
+	})
+
 	document.addEventListener('mousemove', (e) => {
 		x = e.clientX;
 		y = e.clientY;
-
+		
+		if(dragging > -1){
+			$("#" + draggingItem).css('transform', 'translate(' + (x - dragInitX + transformsList[dragging].xOffset) + 'px,' + (y - dragInitY + transformsList[dragging].yOffset) + 'px)');
+		}
 		// options.forEach((option) => {
 		// 	option
 		// });
@@ -438,7 +527,7 @@ import $ from 'jquery';
 		curY = curY * (1 - easeSpeed) + targetY *  (easeSpeed);
 		
 
-		let containerMulti = 1;
+		let containerMulti = -1;
 		$("#container-stack-1").css('transform', 'translate(' + containerMulti * multi * curX + 'vw,' + containerMulti * multi * curY + 'vw)');
 		
 		// below code also moved around the background, but causes a bunch of lag
